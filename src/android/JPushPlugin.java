@@ -19,7 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Map.Entry;
 
-import your.package.name.R;
+import android.content.Context;
 
 import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.CustomPushNotificationBuilder;
@@ -126,8 +126,15 @@ public class JPushPlugin extends CordovaPlugin {
 		String js = String
 				.format("window.plugins.jPushPlugin.receiveMessageInAndroidCallback('%s');",
 						data.toString());
+		
+		
 		try {
 			instance.webView.sendJavascript(js);
+			
+//			String jsEvent=String
+//					.format("cordova.fireDocumentEvent('jpush.receiveMessage',%s)",
+//							data.toString());
+//			instance.webView.sendJavascript(jsEvent);
 		} catch (NullPointerException e) {
 
 		} catch (Exception e) {
@@ -142,13 +149,22 @@ public class JPushPlugin extends CordovaPlugin {
 		String js = String
 				.format("window.plugins.jPushPlugin.openNotificationInAndroidCallback('%s');",
 						data.toString());
+//		{"alert":"ding",
+//		"extras":{
+//			     "cn.jpush.android.MSG_ID":"1691785879",
+//			     "app":"com.thi.pushtest",
+//			     "cn.jpush.android.ALERT":"ding",
+//			     "cn.jpush.android.EXTRA":{},
+//			     "cn.jpush.android.PUSH_ID":"1691785879",
+//			     "cn.jpush.android.NOTIFICATION_ID":1691785879,
+//			     "cn.jpush.android.NOTIFICATION_TYPE":"0"}}
 		try {
 			instance.webView.sendJavascript(js);
 			
-			String jsEvent=String
-    					.format("cordova.fireDocumentEvent('jpush.openNotification',%s)",
-    							data.toString());
-    		instance.webView.sendJavascript(jsEvent);
+//			String jsEvent=String
+//    					.format("cordova.fireDocumentEvent('jpush.openNotification',%s)",
+//    							data.toString());
+//    		instance.webView.sendJavascript(jsEvent);
 		} catch (NullPointerException e) {
 
 		} catch (Exception e) {
@@ -378,11 +394,15 @@ public class JPushPlugin extends CordovaPlugin {
 
 	void setCustomPushNotificationBuilder(JSONArray data,
 			CallbackContext callbackContext) {
+		String packageName = this.cordova.getActivity().getPackageName();
 		CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(
-				this.cordova.getActivity(), R.layout.test_notification_layout,
-				R.id.icon, R.id.title, R.id.text);
+				this.cordova.getActivity(), getResourceIdByName(packageName, "layout", "test_notification_layout"),
+				getResourceIdByName(packageName, "id", "icon"),
+				getResourceIdByName(packageName, "id", "title"),
+				getResourceIdByName(packageName, "id", "text"));
+		
 		builder.developerArg0 = "Custom Builder 1";
-		builder.layoutIconDrawable = R.drawable.jpush_notification_icon;
+		builder.layoutIconDrawable = getResourceIdByName(packageName, "drawable", "jpush_notification_icon");
 		JPushInterface.setPushNotificationBuilder(2, builder);
 		JSONObject obj = new JSONObject();
 		try {
@@ -478,6 +498,36 @@ public class JPushPlugin extends CordovaPlugin {
 	    
 	};
 	
-        
+       
+	private static int getResourceIdByName(String packageName, String className, String name) {
+	    Class<?> r = null;
+	    int id = 0;
+	    try {
+	        r = Class.forName(packageName + ".R");
+	        Class<?>[] classes = r.getClasses();
+	        Class<?> desireClass = null;
+	        for (int i = 0; i < classes.length; i++) {
+	            if (classes[i].getName().split("\\$")[1].equals(className)) {
+	                desireClass = classes[i];
+	                break;
+	            }
+	        }
+	        if (desireClass != null) {
+	            id = desireClass.getField(name).getInt(desireClass);
+	        }
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (IllegalArgumentException e) {
+	        e.printStackTrace();
+	    } catch (SecurityException e) {
+	        e.printStackTrace();
+	    } catch (IllegalAccessException e) {
+	        e.printStackTrace();
+	    } catch (NoSuchFieldException e) {
+	        e.printStackTrace();
+	    }
+	    return id;
+	}
+     
     
 }

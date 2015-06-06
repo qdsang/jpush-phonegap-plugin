@@ -6,6 +6,7 @@
 //
 //
 
+
 #import <Cordova/CDV.h>
 
 #define kJPushPluginReceiveNotification @"JPushPluginReceiveNofication"
@@ -14,6 +15,7 @@
   
 }
 
++(void)setLaunchOptions:(NSDictionary *)theLaunchOptions;
 -(void)setTagsWithAlias:(CDVInvokedUrlCommand*)command;
 -(void)setTags:(CDVInvokedUrlCommand*)command;
 -(void)setAlias:(CDVInvokedUrlCommand*)command;
