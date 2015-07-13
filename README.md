@@ -32,7 +32,6 @@
 ### IOS手工安装
 
 [IOS手工安装文档地址](document/iOS_handle_install.md)
->>>>>>> bob/master
 
 
 ###示例
@@ -81,9 +80,12 @@
 		window.plugins.jPushPlugin.setTagsWithAlias(tags,alias)
 		window.plugins.jPushPlugin.setTags(tags)
 		window.plugins.jPushPlugin.setAlias(alias)
-+ 获取通知内容
++ 获取点击通知内容
 		
 		event - jpush.openNotification
++ 获取通知内容
+		
+		event - jpush.receiveNotification
 
 + 获取自定义消息推送内容
 
@@ -93,9 +95,6 @@
 [通用API详细说明](document/Common_detail_api.md)
 
 #### iOS API简介
-+ 获取 APNs（通知） 推送内容
-
-		event - jpush.receiveNotification
 
 + 获取自定义消息推送内容
 
@@ -131,9 +130,8 @@
 + 获取集成日志
 		window.plugins.jPushPlugin.setDebugMode(mode)
 
-+ 接收推送消息Receiver
++ 接收推送消息和点击通知
 		
-		//推荐使用event jpush.Message和jpush.openNotification，
 		//下面这两个api 是兼容旧有的代码
 		window.plugins.jPushPlugin.receiveMessageInAndroidCallback(data)
 		window.plugins.jPushPlugin.openNotificationInAndroidCallback(data)
